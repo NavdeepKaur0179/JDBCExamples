@@ -68,7 +68,7 @@ public class EmployeeDaoDB implements EmployeeDao {
     @Transactional
     public void deleteEmployeeById(int id) {
         final String DELETE_MEETING_EMPLOYEE="DELETE me.* FROM meeting_employee"+
-                "JOIN employee e ON e.id=me.employeeId WHERE me.employeeId=?";
+                " JOIN employee e ON e.id=me.employeeId WHERE me.employeeId=?";
         jdbc.update(DELETE_MEETING_EMPLOYEE,id);
         
         final String DELETE_EMPLOYEE="DELETE * FROM employee WHERE id=?";

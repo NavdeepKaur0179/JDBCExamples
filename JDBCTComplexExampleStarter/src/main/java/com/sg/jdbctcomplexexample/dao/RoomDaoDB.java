@@ -67,11 +67,11 @@ public class RoomDaoDB implements RoomDao{
     @Transactional
     public void deleteRoomById(int id) {
         final String DELETE_MEETING_EMPLOYEE_BY_ROOM="DELETE me.* FROM meeting_employee "+
-                "JOIN meeting m on m.id=me.meetingId where m.roomId=?";
+                " JOIN meeting m on m.id=me.meetingId where m.roomId=?";
         jdbc.update(DELETE_MEETING_EMPLOYEE_BY_ROOM,id);
         
         final String DELETE_MEETING_BY_ROOM="DELETE m.* FROM meeting"+
-                "JOIN room r on r.id=m.roomID where m.roomId=?";
+                " JOIN room r on r.id=m.roomID where m.roomId=?";
         jdbc.update(DELETE_MEETING_BY_ROOM, id);
         
         final String DELETE_ROOM="DELETE * FROM room where id=?";

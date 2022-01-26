@@ -32,14 +32,14 @@ public class MeetingDaoDB implements MeetingDao {
     private JdbcTemplate jdbc;
 
     private List<Employee> getEmployeesForMeeting(Meeting meeting) {
-        final String SELECT_EMPLOYEES_FOR_MEETING = "SELECT e.* FROM room e"
-                + "JOIN meeting_employee me ON m.employeeId=e.id WHERE m.id=?";
+        final String SELECT_EMPLOYEES_FOR_MEETING = "SELECT e.* FROM employee e"
+                + " JOIN meeting_employee me ON me.employeeId=e.id WHERE me.meetingId=?";
         return jdbc.query(SELECT_EMPLOYEES_FOR_MEETING, new EmployeeMapper(), meeting.getId());
     }
 
     private Room getaRoomForMeeting(Meeting meeting) {
         final String SELECT_ROOM_FOR_MEETING = "SELECT r.* FROM room r"
-                + "JOIN meeting m ON m.roomId=r.id WHERE m.id=?";
+                + " JOIN meeting m ON m.roomId=r.id WHERE m.id=?";
         return jdbc.queryForObject(SELECT_ROOM_FOR_MEETING, new RoomMapper(), meeting.getId());
     }
 
@@ -97,7 +97,7 @@ public class MeetingDaoDB implements MeetingDao {
     @Transactional
     public Meeting addMeeting(Meeting meeting) {
         final String INSERT_MEETING = "INSERT into meeting(name, time, roomId) VALUES(?,?,?)";
-        jdbc.queryForObject(INSERT_MEETING, new MeetingMapper(),
+        jdbc.update(INSERT_MEETING, new MeetingMapper(),
                 meeting.getName(),
                 Timestamp.valueOf(meeting.getTime()),
                 meeting.getRoom()
@@ -146,7 +146,7 @@ public class MeetingDaoDB implements MeetingDao {
     @Override
     public List<Meeting> getMeetingsForEmployee(Employee employee) {
         final String SELECT_MEETINGS_BY_EMPLOYEE = "SELECT m.* FROM meeting"
-                + "JOIN  meeting_employee me ON m.id=me.meetingId WHERE me.employeeId=?";
+                + " JOIN  meeting_employee me ON m.id=me.meetingId WHERE me.employeeId=?";
         List<Meeting> meetings = jdbc.query(SELECT_MEETINGS_BY_EMPLOYEE, new MeetingMapper(), employee.getId());
         getRoomAndmEmployeesForMeetings(meetings);
         return meetings;
