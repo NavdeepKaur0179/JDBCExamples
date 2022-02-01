@@ -66,15 +66,15 @@ public class RoomDaoDB implements RoomDao{
     @Override
     @Transactional
     public void deleteRoomById(int id) {
-        final String DELETE_MEETING_EMPLOYEE_BY_ROOM="DELETE me.* FROM meeting_employee "+
+        final String DELETE_MEETING_EMPLOYEE_BY_ROOM="DELETE me.* FROM meeting_employee me"+
                 " JOIN meeting m on m.id=me.meetingId where m.roomId=?";
         jdbc.update(DELETE_MEETING_EMPLOYEE_BY_ROOM,id);
         
-        final String DELETE_MEETING_BY_ROOM="DELETE m.* FROM meeting"+
+        final String DELETE_MEETING_BY_ROOM="DELETE m.* FROM meeting m"+
                 " JOIN room r on r.id=m.roomID where m.roomId=?";
         jdbc.update(DELETE_MEETING_BY_ROOM, id);
         
-        final String DELETE_ROOM="DELETE * FROM room where id=?";
+        final String DELETE_ROOM="DELETE FROM room WHERE id=?";
         jdbc.update(DELETE_ROOM,id);
     }
     public static final class RoomMapper implements RowMapper<Room>

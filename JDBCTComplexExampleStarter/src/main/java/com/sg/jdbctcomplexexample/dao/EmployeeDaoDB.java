@@ -50,7 +50,7 @@ public class EmployeeDaoDB implements EmployeeDao {
         jdbc.update(INSERT_EMPLOYEE,
                 employee.getFirstName(),
                 employee.getLastName());        
-        int newId=jdbc.queryForObject(INSERT_EMPLOYEE, Integer.class);
+        int newId=jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
         employee.setId(newId);
         return employee;
     }
@@ -67,11 +67,11 @@ public class EmployeeDaoDB implements EmployeeDao {
     @Override
     @Transactional
     public void deleteEmployeeById(int id) {
-        final String DELETE_MEETING_EMPLOYEE="DELETE me.* FROM meeting_employee"+
+        final String DELETE_MEETING_EMPLOYEE="DELETE me.* FROM meeting_employee me"+
                 " JOIN employee e ON e.id=me.employeeId WHERE me.employeeId=?";
         jdbc.update(DELETE_MEETING_EMPLOYEE,id);
         
-        final String DELETE_EMPLOYEE="DELETE * FROM employee WHERE id=?";
+        final String DELETE_EMPLOYEE="DELETE FROM employee WHERE id=?";
         jdbc.update(DELETE_EMPLOYEE,id);
     }
 

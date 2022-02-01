@@ -97,12 +97,12 @@ public class MeetingDaoDB implements MeetingDao {
     @Transactional
     public Meeting addMeeting(Meeting meeting) {
         final String INSERT_MEETING = "INSERT into meeting(name, time, roomId) VALUES(?,?,?)";
-        jdbc.update(INSERT_MEETING, new MeetingMapper(),
+        jdbc.update(INSERT_MEETING,
                 meeting.getName(),
                 Timestamp.valueOf(meeting.getTime()),
-                meeting.getRoom()
+                meeting.getRoom().getId()
         );
-        int newId = jdbc.queryForObject("SELECT LAST_INSERT_ID", Integer.class);
+        int newId = jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
         meeting.setId(newId);
         insertMeetingEmployees(meeting);
         return meeting;
@@ -116,9 +116,9 @@ public class MeetingDaoDB implements MeetingDao {
         jdbc.update(UPDATE_MEETING,
                 meeting.getName(),
                 Timestamp.valueOf(meeting.getTime()),
-                meeting.getRoom(),
+                meeting.getRoom().getId(),
                 meeting.getId());
-        final String DELETE_MEETING_EMPLOYEE = "DELETE * FROM meeting_employee WHERE meeetingId=?";
+        final String DELETE_MEETING_EMPLOYEE = "DELETE FROM meeting_employee WHERE meetingId=?";
         jdbc.update(DELETE_MEETING_EMPLOYEE, meeting.getId());
         insertMeetingEmployees(meeting);
     }
@@ -135,7 +135,7 @@ public class MeetingDaoDB implements MeetingDao {
 
     @Override
     public List<Meeting> getMeetingsForRoom(Room room) {
-        final String SELECT_MEETINGS_BY_ROOM = "SELECt m.* FROM meeting WHERE m.roomId=?";
+        final String SELECT_MEETINGS_BY_ROOM = "SELECt m.* FROM meeting m WHERE m.roomId=?";
         List<Meeting> meetings = jdbc.query(SELECT_MEETINGS_BY_ROOM,
                 new MeetingMapper(),
                 room.getId());
@@ -145,7 +145,7 @@ public class MeetingDaoDB implements MeetingDao {
 
     @Override
     public List<Meeting> getMeetingsForEmployee(Employee employee) {
-        final String SELECT_MEETINGS_BY_EMPLOYEE = "SELECT m.* FROM meeting"
+        final String SELECT_MEETINGS_BY_EMPLOYEE = "SELECT m.* FROM meeting m"
                 + " JOIN  meeting_employee me ON m.id=me.meetingId WHERE me.employeeId=?";
         List<Meeting> meetings = jdbc.query(SELECT_MEETINGS_BY_EMPLOYEE, new MeetingMapper(), employee.getId());
         getRoomAndmEmployeesForMeetings(meetings);
