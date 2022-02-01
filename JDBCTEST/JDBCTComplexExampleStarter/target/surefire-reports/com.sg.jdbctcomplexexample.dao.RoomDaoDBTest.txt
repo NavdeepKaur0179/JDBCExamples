@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+Test set: com.sg.jdbctcomplexexample.dao.RoomDaoDBTest
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.021 sec <<< FAILURE! - in com.sg.jdbctcomplexexample.dao.RoomDaoDBTest
+testAddGetRoom  Time elapsed: 0.006 sec  <<< ERROR!
+java.lang.NullPointerException
+	at com.sg.jdbctcomplexexample.dao.RoomDaoDBTest.testAddGetRoom(RoomDaoDBTest.java:88)
+
